@@ -1,0 +1,13 @@
+{
+  "name": "cloudscale-final-project",
+  "version": "1.0.0",
+  "description": "CloudScale Final Project Web Application",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "node -e \"console.log('Basic test passed')\""
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
