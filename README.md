@@ -30,9 +30,9 @@ The application displays:
 
 The app also includes a /health endpoint. This endpoint is required for Kubernetes readiness and liveness probes.
 
-## Student 1 Work
+## Sajaa Work
 
-Student 1 created:
+Sajaa created:
 - Web application
 - Custom dashboard message with team names (Saja Ghazzal, Mayar, Malak)
 - /health endpoint
@@ -46,7 +46,7 @@ docker build -t cloudscale-final-app:local .
 
 ## Terraform Infrastructure
 
-Student 2 created the Azure infrastructure using Terraform.
+Malak created the Azure infrastructure using Terraform.
 
 The Terraform files are stored in:
 
@@ -84,7 +84,7 @@ terraform apply
 
 ## AKS Verification
 
-After Terraform apply, Student 2 connected kubectl to AKS using:
+After Terraform apply, Malak connected kubectl to AKS using:
 
 ```bash
 az aks get-credentials \
@@ -93,7 +93,7 @@ az aks get-credentials \
   --overwrite-existing
 ```
 
-Then Student 2 verified the AKS nodes:
+Then Malak verified the AKS nodes:
 
 ```bash
 kubectl get nodes
@@ -103,7 +103,7 @@ The expected result is two nodes with status `Ready`.
 
 ## ACR Verification
 
-Student 2 verified Azure Container Registry using:
+Malak verified Azure Container Registry using:
 
 ```bash
 az acr list --resource-group studentnames-final-aks-rg --output table
@@ -115,10 +115,118 @@ AKS can pull images from ACR because Terraform creates an `AcrPull` role assignm
 
 This means Kubernetes does not need `imagePullSecrets`.
 
-## Student 2 Screenshots
+## Malak Screenshots
 
-Student 2 added:
+Malak added:
 
 - Screenshot 3: Terraform apply successful
 - Screenshot 4: AKS nodes ready
 - Screenshot 8: Azure Portal showing AKS + ACR
+
+## Kubernetes Deployment
+
+Mayar created the Kubernetes deployment files.
+
+The Kubernetes files are stored in:
+
+```text
+k8s/
+```
+
+The files are:
+
+- `deployment.yaml`: Creates 3 replicas of the application and uses the `/health` endpoint for readiness and liveness probes.
+- `service.yaml`: Exposes the application using a LoadBalancer service.
+
+## Kubernetes Requirements
+
+The deployment includes:
+
+- 3 replicas
+- Image from Azure Container Registry
+- Container port 3000
+- Readiness probe using `/health`
+- Liveness probe using `/health`
+
+## GitHub Actions CI/CD
+
+Mayar created the GitHub Actions workflow file:
+
+```text
+.github/workflows/ci-cd.yml
+```
+
+The workflow performs:
+
+- Docker image build
+- Health endpoint test
+- Push image to Azure Container Registry
+- Deploy application to Azure Kubernetes Service
+- Manual approval before production deployment
+
+## GitHub Secrets
+
+The workflow uses these GitHub Secrets:
+
+- `AZURE_CLIENT_ID`
+- `AZURE_CLIENT_SECRET`
+- `AZURE_TENANT_ID`
+- `AZURE_SUBSCRIPTION_ID`
+
+These secrets allow GitHub Actions to authenticate to Azure securely.
+
+## GitHub Variables
+
+The workflow uses these GitHub Variables:
+
+- `ACR_NAME`
+- `RESOURCE_GROUP_NAME`
+- `AKS_CLUSTER_NAME`
+- `IMAGE_NAME`
+
+## Manual Approval Gate
+
+A GitHub Environment called `production` was created.
+
+The deployment job uses:
+
+```yaml
+environment: production
+```
+
+This makes GitHub Actions wait for manual approval before deploying to AKS.
+
+## Accessing the Application
+
+After deployment, the external IP can be found using:
+
+```bash
+kubectl get service cloudscale-final-service
+```
+
+Then open:
+
+```text
+http://EXTERNAL-IP
+```
+
+## Mayar Screenshots
+
+Mayar added:
+
+- Screenshot 2: Image in ACR
+- Screenshot 5: Application running in browser
+- Screenshot 6: GitHub Actions workflow successful
+- Screenshot 7: GitHub Actions approval gate
+
+## Cleanup
+
+After submitting the project and saving all screenshots, delete Azure resources to avoid charges:
+
+```bash
+cd terraform
+terraform destroy
+```
+
+Do not run this command before final submission.
+
